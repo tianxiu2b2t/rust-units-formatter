@@ -18,31 +18,31 @@ pub const TIME_UNITS: [(&str, f64); 6] = [
 /// # 返回
 /// 返回一个字符串，例如 `"1.50min"`、`"123.45ms"` 等。
 pub fn format_duration(duration: Duration, round: Option<u8>) -> String {
+    let p = round.unwrap_or(2).min(10) as usize;
+    let ns = duration.as_nanos();
+    if ns < 1_000 {
+        return format!("{:.p$}ns", ns);
+    }
+    let μs = duration.as_micros();
+    if μs < 1_000 {
+        return format!("{:.p$}μs", μs);
+    }
+    let ms = duration.as_millis();
+    if ms < 1_000 {
+        return format!("{:.p$}ms", ms);
+    }
+    let sec = duration.as_secs();
+    if sec < 60 {
+        return format!("{:.p$}s", sec);
+    }
     let sec = duration.as_secs_f64();
     let min = sec / 60.0;
-    let h = min / 60.0;
-
-    let precision = round.unwrap_or(2).min(10) as usize;
-
-    if h > 0.0 {
-        return format!("{:.precision$}h", h);
-    } else if min > 0.0 {
-        return format!("{:.precision$}min", min);
-    } else if sec > 0.0 {
-        return format!("{:.precision$}s", sec);
-    } 
-
-    let ms = duration.as_millis();
-    let μs = duration.as_micros();
-    let ns = duration.as_nanos();
-    if ms > 0 {
-        return format!("{:.precision$}ms", ms);
-    } else if μs > 0 {
-        return format!("{:.precision$}μs", μs);
-    } else if ns > 0 {
-        return format!("{:.precision$}ns", ns);
+    if min < 60.0 {
+        return format!("{:.p$}min", min);
     }
-    "0ns".to_string()
+    let h = min / 60.0;
+    format!("{:.p$}h", h)
+
 }
 
 /// 将 `Duration` 格式化为更人类友好的字符串，按小时、分钟、秒显示。
