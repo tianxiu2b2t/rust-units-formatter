@@ -5,5 +5,9 @@ edition = "2024"
 authors = [
     "tianxiu2b2t <atianxiua@163.com>"
 ]
+description = "A simple library to format units"
+license = "MIT"
+repository = "https://github.com/tianxiu2b2t/rust-units-formatter"
+homepage = "https://github.com/tianxiu2b2t/rust-units-formatter"
 
 [dependencies]
